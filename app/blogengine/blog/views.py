@@ -1,8 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpRequest
+from .models import *
 
 # Create your views here.
 
+
 def posts_list(request):
-    names = ['Oleg', 'Masha', 'Vanya', 'Nastya']
-    return render(request, 'blog/index.html', context={'names': names})
+    posts = Post.objects.all()
+    return render(request, 'blog/index.html', context={'posts': posts})
+
+
+def post_detail(request, slug):
+    post = Post.objects.get(slug__iexact=slug)
+    return render(request, 'blog/post_detail.html', context={'post':post})
+
+
