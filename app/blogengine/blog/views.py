@@ -5,12 +5,21 @@ from .utils import *
 from .forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core .paginator import Paginator
+from django.db.models import Q
 
 #   --------------------------posts-----------------------------
 
 
 def posts_list(request):
-    posts = Post.objects.all()
+    """ выводим все посты на страницу """
+
+    # поиск по постам
+    search_query = request.GET.get('search', '')
+    if search_query:
+        posts = Post.objects.filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
+    else:
+        posts = Post.objects.all()
+
     # пагинация страниц
     paginator = Paginator(posts, 2)
     page_number = request.GET.get('page', 1)
